@@ -1,0 +1,158 @@
+import os
+import shutil
+
+# Configuração das Ferramentas
+ferramentas = [
+    {"slug": "calculadora-juros-compostos", "titulo": "Juros Compostos", "cor": "blue", "logic": "const total = p * Math.pow((1 + (i / 100)), t); resultado = { total: Number(total.toFixed(2)), itens: [{ label: 'Capital Inicial', valor: p, tipo: 'info' }, { label: 'Rendimento Total', valor: Number((total - p).toFixed(2)), tipo: 'positivo' }] };", "inputs": [{"label": "Investimento Inicial (R$)", "var": "p"}, {"label": "Taxa Anual (%)", "var": "i"}, {"label": "Anos", "var": "t"}]},
+    {"slug": "simulador-clt-vs-pj", "titulo": "Salário Líquido", "cor": "emerald", "logic": "const inss = Number((p * 0.11).toFixed(2)); const irrf = Number((p * 0.075).toFixed(2)); const liquido = p - inss - irrf; resultado = { total: Number(liquido.toFixed(2)), itens: [{ label: 'Salário Bruto', valor: p, tipo: 'positivo' }, { label: 'Desconto INSS (11%)', valor: inss, tipo: 'negativo' }, { label: 'Desconto IRRF (7.5%)', valor: irrf, tipo: 'negativo' }] };", "inputs": [{"label": "Salário Bruto (R$)", "var": "p"}]},
+    {"slug": "calculadora-decimo-terceiro", "titulo": "13º Salário", "cor": "indigo", "logic": "const total = (p / 12) * i; resultado = { total: Number(total.toFixed(2)), itens: [{ label: 'Salário Base', valor: p, tipo: 'info' }, { label: 'Meses Proporcionais', valor: i, tipo: 'quantidade' }] };", "inputs": [{"label": "Salário Bruto (R$)", "var": "p"}, {"label": "Meses Trabalhados", "var": "i"}]},
+    {"slug": "calculadora-horas-extras", "titulo": "Horas Extras", "cor": "orange", "logic": "const vh = Number((p / 220).toFixed(2)); const va = Number((vh * 1.5).toFixed(2)); const tot = va * i; resultado = { total: Number(tot.toFixed(2)), itens: [{ label: 'Valor da Hora Comum', valor: vh, tipo: 'info' }, { label: 'Valor com Adicional (50%)', valor: va, tipo: 'positivo' }] };", "inputs": [{"label": "Salário Bruto (R$)", "var": "p"}, {"label": "Total de Horas Extras", "var": "i"}]},
+    {"slug": "calculadora-margem-de-lucro", "titulo": "Margem de Lucro", "cor": "cyan", "logic": "const margem = ((p - i) / p) * 100; resultado = { total: Number(margem.toFixed(2)), itens: [{ label: 'Preço de Venda', valor: p, tipo: 'info' }, { label: 'Custo do Produto', valor: i, tipo: 'negativo' }] };", "inputs": [{"label": "Preço de Venda (R$)", "var": "p"}, {"label": "Custo do Produto (R$)", "var": "i"}]},
+    {"slug": "calculadora-de-roi", "titulo": "ROI", "cor": "violet", "logic": "const ganho = p - i; const roi = (ganho / i) * 100; resultado = { total: Number(roi.toFixed(2)), itens: [{ label: 'Investimento Inicial', valor: i, tipo: 'negativo' }, { label: 'Ganho Líquido', valor: Number(ganho.toFixed(2)), tipo: 'positivo' }] };", "inputs": [{"label": "Ganho Obtido (R$)", "var": "p"}, {"label": "Valor Investido (R$)", "var": "i"}]},
+    {"slug": "simulador-de-parcelamento", "titulo": "Parcelamento", "cor": "rose", "logic": "const total = p * (1 + (i / 100)); const vp = total / t; resultado = { total: Number(total.toFixed(2)), itens: [{ label: 'Valor da Parcela', valor: Number(vp.toFixed(2)), tipo: 'info' }, { label: 'Juros Totais', valor: Number((total - p).toFixed(2)), tipo: 'negativo' }] };", "inputs": [{"label": "Valor à Vista (R$)", "var": "p"}, {"label": "Taxa de Juros Total (%)", "var": "i"}, {"label": "Nº de Parcelas", "var": "t"}]},
+    {"slug": "alcool-ou-gasolina", "titulo": "Álcool ou Gasolina", "cor": "amber", "logic": "const rel = (p / i); const rec = rel <= 0.7 ? 'Abasteça com Álcool' : 'Abasteça com Gasolina'; resultado = { total: Number((rel * 100).toFixed(2)), itens: [{ label: 'Relação de Preço', valor: Number((rel * 100).toFixed(2)), tipo: 'porcentagem' }, { label: 'Recomendação', valor: 0, tipo: 'texto', custom: rec }] };", "inputs": [{"label": "Preço Álcool (R$)", "var": "p"}, {"label": "Preço Gasolina (R$)", "var": "i"}]},
+    {"slug": "custo-funcionario-empresa", "titulo": "Custo de Staff", "cor": "slate", "logic": "const fgts = p * 0.08; const fer = p / 12; const total = p + fgts + fer; resultado = { total: Number(total.toFixed(2)), itens: [{ label: 'Salário Base', valor: p, tipo: 'info' }, { label: 'Provisão FGTS (8%)', valor: fgts, tipo: 'negativo' }, { label: 'Provisão 13º/Férias', valor: fer, tipo: 'negativo' }] };", "inputs": [{"label": "Salário Bruto (R$)", "var": "p"}]},
+    {"slug": "calculadora-de-comissao", "titulo": "Comissão", "cor": "fuchsia", "logic": "const com = p * (i / 100); resultado = { total: Number(com.toFixed(2)), itens: [{ label: 'Total de Vendas', valor: p, tipo: 'info' }, { label: 'Comissão Aplicada', valor: i, tipo: 'porcentagem' }] };", "inputs": [{"label": "Valor da Venda (R$)", "var": "p"}, {"label": "Comissão (%)", "var": "i"}]}
+]
+
+def gerar():
+    diretorio_script = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(diretorio_script, "web", "src", "app", "ferramentas")
+    
+    if os.path.exists(base_path):
+        shutil.rmtree(base_path)
+    os.makedirs(base_path, exist_ok=True)
+    
+    for f in ferramentas:
+        path = os.path.join(base_path, f['slug'])
+        os.makedirs(path, exist_ok=True)
+        
+        inputs_html = ""
+        for inp in f['inputs']:
+            inputs_html += f"""
+            <div className="mb-6 text-left">
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">{inp['label']}</label>
+              <input 
+                type="number" step="0.01" placeholder="0,00"
+                onChange={{(e) => set{inp['var'].upper()}(Number(e.target.value))}} 
+                className="w-full p-4 bg-slate-900/50 border border-white/10 rounded-2xl outline-none focus:border-{f['cor']}-500 transition-all text-white font-mono" 
+              />
+            </div>"""
+        
+        # Declaramos os estados p, i, t separadamente para garantir inicialização
+        states = "const [p, setP] = useState(0);\n  const [i, setI] = useState(0);\n  const [t, setT] = useState(0);"
+
+        content = f"""'use client';
+import {{ useState, useEffect }} from 'react';
+import {{ useRouter }} from 'next/navigation';
+import Link from 'next/link';
+
+export default function Page() {{
+  {states}
+  const [detalhes, setDetalhes] = useState<any>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {{
+    setIsVisible(true);
+  }}, []);
+
+  const handleBack = (e: React.MouseEvent) => {{
+    e.preventDefault();
+    setIsExiting(true);
+    setTimeout(() => {{
+      router.push('/');
+    }}, 350);
+  }};
+
+  const calcular = () => {{
+    try {{
+      let resultado: any = {{ total: 0, itens: [] }};
+      // Aqui renomeamos para evitar conflito com os parâmetros da função interna
+      const rawP = Number(p) || 0;
+      const rawI = Number(i) || 0;
+      const rawT = Number(t) || 0;
+
+      ((p, i, t) => {{
+        {f['logic']}
+        setDetalhes(resultado);
+      }})(rawP, rawI, rawT);
+    }} catch (err) {{
+      console.error("Erro no cálculo:", err);
+    }}
+  }};
+
+  return (
+    <main className={{`relative min-h-screen bg-[#020617] py-12 px-6 font-sans text-white transition-all duration-500 ease-in-out ${{isVisible && !isExiting ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}}`}}>
+      <div className="fixed inset-0 bg-[#020617] -z-10 pointer-events-none" />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-{f['cor']}-900/10 blur-[150px] rounded-full pointer-events-none z-0"></div>
+
+      <div className="relative z-10 max-w-2xl mx-auto">
+        <header className="mb-12 text-center">
+          <button onClick={{handleBack}} className="group mb-8 flex items-center gap-3 mx-auto bg-white/5 hover:bg-white/10 border border-white/10 px-8 py-3 rounded-full transition-all active:scale-95">
+            <span className="text-slate-400 group-hover:text-{f['cor']}-400 transition-colors text-[10px] font-black uppercase tracking-[0.3em]">Voltar</span>
+          </button>
+          <div className="block bg-{f['cor']}-500/10 border border-{f['cor']}-500/20 px-4 py-1 rounded-full text-[10px] font-black text-{f['cor']}-400 uppercase tracking-[0.3em] mb-4 italic w-fit mx-auto">
+            FerramentasPro
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter italic uppercase leading-none">{{ "{f['titulo']}" }}</h1>
+          <div className="h-1 w-20 bg-{f['cor']}-600 mx-auto rounded-full mt-6 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
+        </header>
+
+        <div className="bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl p-8 sm:p-12">
+            {inputs_html} 
+            <button onClick={{calcular}} className="w-full mt-8 bg-white text-slate-900 font-black py-6 rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest text-xs">Calcular</button>
+
+            {{detalhes && (
+              <div className="mt-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="bg-{f['cor']}-500/10 p-10 rounded-[2rem] text-center border border-{f['cor']}-500/20 mb-8 relative overflow-hidden">
+                  <span className="text-{f['cor']}-400 font-black uppercase text-[10px] tracking-[0.3em] mb-4 block italic">Resultado Final</span>
+                  <div className="text-5xl sm:text-6xl font-black text-white tracking-tighter">
+                    {{ "{f['slug']}".includes("margem") || "{f['slug']}".includes("roi") || "{f['slug']}".includes("alcool") 
+                        ? detalhes.total.toLocaleString('pt-BR', {{ minimumFractionDigits: 2 }}) + "%" 
+                        : "R$ " + detalhes.total.toLocaleString('pt-BR', {{ minimumFractionDigits: 2 }}) }}
+                  </div>
+                </div>
+
+                <div className="bg-white/5 backdrop-blur-md rounded-[2rem] p-8 border border-white/5 space-y-4">
+                    {{detalhes.itens.map((item: any, idx: number) => (
+                    <div key={{idx}} className="flex justify-between items-center py-3 border-b border-white/5 last:border-0">
+                        <span className="text-slate-400 text-xs font-bold uppercase tracking-wider italic">{{item.label}}</span>
+                        <span className={{`font-mono font-bold text-sm ${{item.tipo === 'negativo' ? 'text-red-400' : item.tipo === 'positivo' ? 'text-emerald-400' : 'text-white'}}`}}>
+                        {{ item.tipo === 'negativo' ? '- ' : '' }}
+                        {{ item.tipo === 'quantidade' ? item.valor : item.tipo === 'porcentagem' ? item.valor.toLocaleString('pt-BR') + '%' : item.tipo === 'texto' ? item.custom : "R$ " + item.valor.toLocaleString('pt-BR', {{ minimumFractionDigits: 2 }}) }}
+                        </span>
+                    </div>
+                    ))}}
+                </div>
+              </div>
+            )}}
+
+            <div className="mt-8 pt-6 border-t border-white/5">
+              <div className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4 flex gap-4 items-start">
+                <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <div>
+                  <h4 className="text-[14px] font-black text-blue-400 uppercase tracking-widest mb-1">Aviso de Responsabilidade</h4>
+                  <p className="text-[12px] text-slate-500 leading-relaxed italic">
+                    Os cálculos gerados são estimativas baseadas nos dados fornecidos e possuem fins meramente informativos. 
+                    O <strong>FerramentasPro</strong> não se responsabiliza por decisões financeiras ou legais tomadas com base nestes resultados. 
+                    Recomendamos a consulta com um profissional qualificado.
+                  </p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </main>
+  );
+}}"""
+        with open(os.path.join(path, "page.tsx"), "w", encoding="utf-8") as file:
+            file.write(content)
+    
+    print(f"✅ SUCESSO: Rotas recriadas sem erros de inicialização.")
+
+if __name__ == "__main__":
+    gerar()
