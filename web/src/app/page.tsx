@@ -147,18 +147,16 @@ export default function Home() {
       
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] bg-blue-500/10 blur-[120px] sm:blur-[160px] rounded-full pointer-events-none z-0"></div>
 
-      <header className="relative z-20 text-center pt-2 mb-2">
+      <header className="relative z-20 text-center pt-2 mb-0">
+        {/* ADICIONE ESTA LINHA ABAIXO PARA O ANÚNCIO APARECER */}
+        <BannerAd /> 
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-1 italic uppercase leading-tight">
           Ferramentas<span className="text-blue-500">Pro</span>
         </h1>
         <div className="h-1 w-16 sm:w-54 bg-blue-500 mx-auto rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] mb-4"></div>
         <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] max-w-[280px] sm:max-w-none mx-auto leading-relaxed">
           Soluções rápidas para cálculos do dia a dia.
-        </p>
-
-        {/* ADICIONE ESTA LINHA ABAIXO PARA O ANÚNCIO APARECER */}
-        <BannerAd /> 
-        
+        </p>       
       </header>
 
       <div className="relative w-full h-[300px] sm:h-[450px] -mt-20 sm:mt-10 z-10 flex items-center justify-center [perspective:2000px]">
