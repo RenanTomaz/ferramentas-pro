@@ -161,7 +161,7 @@ export default function Home() {
         
       </header>
 
-      <div className="relative w-full h-[300px] sm:h-[450px] -mt-10 sm:mt-0 z-10 flex items-center justify-center [perspective:2000px]">
+      <div className="relative w-full h-[300px] sm:h-[450px] -mt-20 sm:mt-10 z-10 flex items-center justify-center [perspective:2000px]">
         
         {/* SETA ESQUERDA - Apenas Desktop */}
         <button 
