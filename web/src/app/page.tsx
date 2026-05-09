@@ -155,6 +155,10 @@ export default function Home() {
         <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] max-w-[280px] sm:max-w-none mx-auto leading-relaxed">
           Soluções rápidas para cálculos do dia a dia.
         </p>
+
+        {/* ADICIONE ESTA LINHA ABAIXO PARA O ANÚNCIO APARECER */}
+        <BannerAd /> 
+        
       </header>
 
       <div className="relative w-full h-[300px] sm:h-[450px] -mt-10 sm:mt-0 z-10 flex items-center justify-center [perspective:2000px]">
